@@ -7,7 +7,7 @@ public class ProdutoModel
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; } = default!;
+    public int ProdutoID { get; set; } = default!;
 
     [Required]
     [StringLength(255)]

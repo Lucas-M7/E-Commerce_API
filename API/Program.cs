@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 #region Container
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
+builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
 #endregion
 
 #region TokenJWT

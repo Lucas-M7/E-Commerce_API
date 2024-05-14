@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ConnectContext))]
-    [Migration("20240513171012_CriandoBancoDeDados")]
-    partial class CriandoBancoDeDados
+    [Migration("20240514222430_ModificandoAsColunas")]
+    partial class ModificandoAsColunas
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,13 +24,46 @@ namespace API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("API.Domain.Models.ProdutoModel", b =>
+            modelBuilder.Entity("API.Domain.Models.CarrinhoModel", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int>("ProdutoID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProdutoNome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("ProdutoPreco")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UsuarioNome")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Carrinho");
+                });
+
+            modelBuilder.Entity("API.Domain.Models.ProdutoModel", b =>
+                {
+                    b.Property<int>("ProdutoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProdutoID"));
 
                     b.Property<string>("Categoria")
                         .IsRequired()
@@ -53,7 +86,7 @@ namespace API.Migrations
                     b.Property<double>("Preco")
                         .HasColumnType("float");
 
-                    b.HasKey("ID");
+                    b.HasKey("ProdutoID");
 
                     b.ToTable("Produtos");
                 });

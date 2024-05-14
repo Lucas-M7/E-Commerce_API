@@ -22,7 +22,7 @@ public class ProdutosController(IProdutoService produtoService) : ControllerBase
         {
             produto.Add(new ProdutoModelView
             {
-                ID = item.ID,
+                ID = item.ProdutoID,
                 Nome = item.Nome,
                 Descricao = item.Descricao,
                 Preco = item.Preco,

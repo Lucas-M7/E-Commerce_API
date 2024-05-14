@@ -27,7 +27,7 @@ public class UsuarioService(ConnectContext context) : IUsuarioService
         _context.SaveChanges();
     }
 
-    public List<UsuarioModel> ListarUsuarios(int? pagina)
+    public List<UsuarioModel> ListarUsuarios(int? pagina = 1)
     {
         var consulta = _context.Usuarios.AsQueryable();
 

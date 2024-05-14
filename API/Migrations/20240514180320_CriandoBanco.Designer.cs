@@ -3,6 +3,7 @@ using API.Infrastucture.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(ConnectContext))]
-    partial class ConnectContextModelSnapshot : ModelSnapshot
+    [Migration("20240514180320_CriandoBanco")]
+    partial class CriandoBanco
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,21 +26,14 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Domain.Models.CarrinhoModel", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("CarrinhoID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarrinhoID"));
 
                     b.Property<int>("ProdutoID")
                         .HasColumnType("int");
-
-                    b.Property<string>("ProdutoNome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("ProdutoPreco")
-                        .HasColumnType("float");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("int");
@@ -45,11 +41,7 @@ namespace API.Migrations
                     b.Property<int>("UsuarioID")
                         .HasColumnType("int");
 
-                    b.Property<string>("UsuarioNome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
+                    b.HasKey("CarrinhoID");
 
                     b.ToTable("Carrinho");
                 });
