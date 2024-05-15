@@ -15,44 +15,16 @@ public class CarrinhoController(ConnectContext context, ICarrinhoService carrinh
     private readonly ICarrinhoService _carrinhoService = carrinhoService;
 
     [HttpPost("carrinho")]
-    public IActionResult AdicionarAoCarrinho(int usuarioId, int produtoId, int quantidade)
+    public IActionResult AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
         try
         {
-            var usuarioI = _context.Usuarios.FirstOrDefault(u => u.ID == usuarioId);
-
-            if (usuarioI == null)
-                return NotFound("Usuário não encontrado.");
-
-            var produtoI = _context.Produtos.FirstOrDefault(p => p.ProdutoID == produtoId);
-
-            if (produtoI == null)
-                return NotFound("Produto não encontrado.");
-
-            var cartItem = _context.Carrinho.FirstOrDefault(c => c.UsuarioID == usuarioId && c.ProdutoID == produtoId);
-
-            if (cartItem == null)
-            {
-                cartItem = new CarrinhoModel
-                {
-                    UsuarioID = usuarioId,
-                    ProdutoID = produtoId,
-                    UsuarioNome = usuarioI.Nome,
-                    ProdutoNome = produtoI.Nome,
-                    ProdutoPreco = produtoI.Preco,
-                    Quantidade = quantidade
-                };
-                _context.Carrinho.Add(cartItem);
-            }
-            else
-                cartItem.Quantidade += quantidade;
-
-            _context.SaveChanges();
+            _carrinhoService.AdicionarAoCarrinho(usuarioNome, produtoId, quantidade);
             return Ok("Item adicionado ao carrinho com sucesso.");
         }
-        catch (Exception ex)
+        catch
         {
-            return BadRequest($"Erro ao adicionar o produto ao carrinho.: {ex.Message}");
+            return BadRequest("Erro ao adicionar o produto ao carrinho.");
         }
     }
 }

@@ -8,26 +8,40 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
 {
     private readonly ConnectContext _context = context;
 
-    public void AdicionarAoCarrinho(int usuarioId, int produtoId, int quantidade)
+    public void AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
-        var carrinhoItem = _context.Carrinho.FirstOrDefault
-            (c => c.UsuarioID == usuarioId && c.ProdutoID == produtoId);
-
-        if (carrinhoItem == null)
+        try
         {
-            carrinhoItem = new CarrinhoModel
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Nome == usuarioNome)
+                ?? throw new FileNotFoundException("Usuário não encontrado.");
+
+            var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoID == produtoId)
+                ?? throw new FileNotFoundException("Produto não encontrado.");
+
+            var carrinhoItem = _context.Carrinho.FirstOrDefault();
+
+            if (carrinhoItem == null)
             {
-                UsuarioID = usuarioId,
-                ProdutoID = produtoId,
-                Quantidade = quantidade
-            };
-            _context.Carrinho.Add(carrinhoItem);
-        }
-        else
-        {
-            carrinhoItem.Quantidade += quantidade;
-        }
+                carrinhoItem = new CarrinhoModel
+                {
+                    UsuarioNome = usuario.Nome,
+                    ProdutoNome = produto.Nome,
+                    Quantidade = quantidade,
+                    Total = produto.Preco * quantidade
+                };
+                _context.Carrinho.Add(carrinhoItem);
+            }
+            else
+            {
+                carrinhoItem.Quantidade += quantidade;
+                carrinhoItem.Total = produto.Preco * carrinhoItem.Quantidade;
+            }
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch
+        {
+            throw new BadHttpRequestException("Erro ao adicionar produto ao carrinho.");
+        }
     }
 }
