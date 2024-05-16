@@ -15,22 +15,18 @@ public class ProdutosController(IProdutoService produtoService) : ControllerBase
     [HttpGet("produtos")]
     public IActionResult ListarProdutos([FromQuery] int? pagina)
     {
-        var produto = new List<ProdutoModelView>();
-        var produtos = _produtoService.ListarProdutos(pagina);
+        var produtos = _produtoService.ListarProdutos(pagina)
+                .Select(item => new ProdutoModelView
+                {
+                    ID = item.ProdutoID,
+                    Nome = item.Nome,
+                    Descricao = item.Descricao,
+                    Preco = item.Preco,
+                    Categoria = item.Categoria,
+                    Estoque = item.Estoque
+                })
+                .ToList();
 
-        foreach(var item in produtos)
-        {
-            produto.Add(new ProdutoModelView
-            {
-                ID = item.ProdutoID,
-                Nome = item.Nome,
-                Descricao = item.Descricao,
-                Preco = item.Preco,
-                Categoria = item.Categoria,
-                Estoque = item.Estoque
-            });
-        }
-
-        return Ok(produto);
+        return Ok(produtos);
     }
 }

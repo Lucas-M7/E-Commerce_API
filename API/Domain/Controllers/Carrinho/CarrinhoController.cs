@@ -1,5 +1,5 @@
 using API.Domain.Interfaces;
-using API.Domain.Models;
+using API.Domain.ModelViews;
 using API.Infrastucture.DB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +25,37 @@ public class CarrinhoController(ConnectContext context, ICarrinhoService carrinh
         catch
         {
             return BadRequest("Erro ao adicionar o produto ao carrinho.");
+        }
+    }
+
+    [HttpGet("carrinho")]
+    public IActionResult ListarItensNoCarrinho([FromQuery] int? pagina)
+    {
+        var itens = _carrinhoService.ListarItensNoCarrinho(pagina)
+            .Select(item => new ProdutoCarrinhoModelView
+            {
+                ID = item.ID,
+                UsuarioNome = item.UsuarioNome,
+                ProdutoNome = item.ProdutoNome,
+                ProdutoPreco = item.ProdutoPreco,
+                ProdutoQuantidade = item.Quantidade,
+                ValorDoCarrinho = item.Total
+            }).ToList();
+
+        return Ok(itens);
+    }
+
+    [HttpDelete("carrinho")]
+    public IActionResult RemoverItemDoCarrinho(int carrinhoId, int quantidade)
+    {
+        try
+        {
+            _carrinhoService.RemoverDoCarrinho(carrinhoId, quantidade);
+            return Ok("Produto removido com sucesso.");
+        }
+        catch
+        {
+            return BadRequest("Erro ao remover produto do carrinho.");
         }
     }
 }

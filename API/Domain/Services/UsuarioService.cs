@@ -1,7 +1,11 @@
 using API.Domain.DTOs;
 using API.Domain.Interfaces;
 using API.Domain.Models;
+using API.Domain.ModelViews;
+using API.Domain.Validations;
 using API.Infrastucture.DB;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Server.IIS;
 
 namespace API.Domain.Services;
 

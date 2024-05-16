@@ -3,8 +3,9 @@ namespace API.Domain.ModelViews;
 public class ProdutoCarrinhoModelView
 {
     public int ID { get; set; }
-    public string Nome { get; set; } = default!;
-    public string Descricao { get; set; } = default!;
-    public double Preco { get; set; } = default!;
-    public string Categoria { get; set; } = default!;
+    public string UsuarioNome { get; set; } = default!;
+    public string ProdutoNome { get; set; } = default!;
+    public double ProdutoPreco { get; set; } = default!;
+    public int ProdutoQuantidade { get; set; } = default!;
+    public double ValorDoCarrinho { get; set; }
 }

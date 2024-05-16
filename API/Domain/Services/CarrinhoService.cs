@@ -8,40 +8,135 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
 {
     private readonly ConnectContext _context = context;
 
+    #region AdicionarAoCarrinho
     public void AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
         try
         {
-            var usuario = _context.Usuarios.FirstOrDefault(u => u.Nome == usuarioNome)
-                ?? throw new FileNotFoundException("Usuário não encontrado.");
+            var usuario = ObterUsuario(usuarioNome);
+            var produto = ObterProduto(produtoId);
 
-            var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoID == produtoId)
-                ?? throw new FileNotFoundException("Produto não encontrado.");
+            var carrinhoProduto = _context.Carrinho
+                .FirstOrDefault(c => c.UsuarioNome == usuarioNome && c.ProdutoID == produtoId);
 
-            var carrinhoItem = _context.Carrinho.FirstOrDefault();
-
-            if (carrinhoItem == null)
-            {
-                carrinhoItem = new CarrinhoModel
-                {
-                    UsuarioNome = usuario.Nome,
-                    ProdutoNome = produto.Nome,
-                    Quantidade = quantidade,
-                    Total = produto.Preco * quantidade
-                };
-                _context.Carrinho.Add(carrinhoItem);
-            }
+            if (carrinhoProduto == null)
+                AdicionarNovoItem(usuarioNome, produto, quantidade);
             else
-            {
-                carrinhoItem.Quantidade += quantidade;
-                carrinhoItem.Total = produto.Preco * carrinhoItem.Quantidade;
-            }
+                AtualizarItemExistente(carrinhoProduto, quantidade);
 
+            AtualizarPrecoTotalCarrinho(usuarioNome);
             _context.SaveChanges();
+        }
+        catch (FileNotFoundException ex)
+        {
+            throw new BadHttpRequestException(ex.Message);
+        }
+    }
+    #endregion
+
+    #region ObterUsuario
+    private UsuarioModel ObterUsuario(string usuarioNome)
+    {
+        return _context.Usuarios.FirstOrDefault(u => u.Nome == usuarioNome)
+            ?? throw new FileNotFoundException("Usuário não encontrado.");
+    }
+    #endregion
+
+    #region ObterProduto
+    private ProdutoModel ObterProduto(int produtoId)
+    {
+        return _context.Produtos.FirstOrDefault(p => p.ProdutoID == produtoId)
+            ?? throw new FileNotFoundException("Produto não encontrado.");
+    }
+    #endregion
+
+    #region AdicionarNovoItem
+    private void AdicionarNovoItem(string usuarioNome, ProdutoModel produto, int quantidade)
+    {
+        var totalCarrinho = _context.Carrinho
+            .Where(c => c.UsuarioNome == usuarioNome)
+            .Sum(c => c.ProdutoPreco * c.Quantidade);
+
+        var carrinhoProduto = new CarrinhoModel
+        {
+            UsuarioNome = usuarioNome,
+            ProdutoNome = produto.Nome,
+            ProdutoPreco = produto.Preco,
+            ProdutoID = produto.ProdutoID,
+            Quantidade = quantidade,
+            Total = produto.Preco * quantidade
+        };
+
+        _context.Carrinho.Add(carrinhoProduto);
+    }
+    #endregion
+
+    #region AtualizarItem
+    private static void AtualizarItemExistente(CarrinhoModel carrinhoProduto, int quantidade)
+    {
+        carrinhoProduto.Quantidade += quantidade;
+        carrinhoProduto.Total = carrinhoProduto.ProdutoPreco * carrinhoProduto.Quantidade;
+    }
+    #endregion
+
+    #region AtualizarPrecoTotal
+    private void AtualizarPrecoTotalCarrinho(string usuarioNome)
+    {
+        var carrinhoItens = _context.Carrinho
+            .Where(c => c.UsuarioNome == usuarioNome).ToList();
+
+        var totalCarrinho = carrinhoItens.Sum(c => c.Total);
+
+        foreach (var item in carrinhoItens)
+        {
+            item.Total = totalCarrinho;
+        }
+    }
+    #endregion
+
+    #region ListarItens
+    public List<CarrinhoModel> ListarItensNoCarrinho(int? pagina = 1)
+    {
+        var consulta = _context.Carrinho.AsQueryable();
+
+        int itensPorPagina = 10;
+
+        if (pagina != null)
+        {
+            consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
+        }
+
+        return [.. consulta];
+    }
+    #endregion
+
+    #region RemoverItem
+    public void RemoverDoCarrinho(int id, int quantidade)
+    {
+        try
+        {
+            var carrinhoItem = _context.Carrinho.FirstOrDefault(x => x.ID == id);
+
+            if (carrinhoItem != null)
+            {
+                if (quantidade >= carrinhoItem.Quantidade)
+                {
+                    _context.Carrinho.Remove(carrinhoItem);
+                }
+                else
+                {
+                    carrinhoItem.Quantidade -= quantidade;
+                    carrinhoItem.Total = carrinhoItem.ProdutoPreco * carrinhoItem.Quantidade;
+                }
+
+                AtualizarPrecoTotalCarrinho(carrinhoItem.UsuarioNome);
+                _context.SaveChanges();
+            }
         }
         catch
         {
-            throw new BadHttpRequestException("Erro ao adicionar produto ao carrinho.");
+            throw new Exception("Erro ao remover produto do carrinho.");
         }
     }
+    #endregion
 }

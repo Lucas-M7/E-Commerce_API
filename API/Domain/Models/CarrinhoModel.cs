@@ -16,6 +16,12 @@ public class CarrinhoModel
     public string ProdutoNome { get; set; } = default!;
 
     [Required]
+    public double ProdutoPreco { get; set; } = default!;
+
+    [Required]
+    public int ProdutoID { get; set; }
+
+    [Required]
     public double Total { get; set; } = default!;
 
     [Required]
