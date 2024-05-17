@@ -2,13 +2,13 @@ using API.Domain.DTOs;
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Domain.ModelViews;
-using API.Domain.Token;
-using API.Domain.Validations;
 using API.Infrastucture.DB;
+using API.Services.Token;
+using API.Services.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Domain.Controller;
+namespace API.Application.Controller;
 
 [ApiController]
 [Route("api/")]
@@ -68,6 +68,7 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     }
     #endregion
 
+    #region Listar
     [Authorize]
     [HttpGet("usuarios")]
     public IActionResult ListarUsuarios([FromQuery] int? pagina)
@@ -86,5 +87,21 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
         }
 
         return Ok(usuario);
+    }
+    #endregion
+
+    [Authorize]
+    [HttpDelete("usuarios/{id}")]
+    public IActionResult ApagarUsuario(int id)
+    {
+        try
+        {
+            _usuarioService.Apagar(id);
+            return Ok("Usuario removido com sucesso.");
+        }
+        catch
+        {
+            return BadRequest("Erro ao remover o usuário.");
+        }
     }
 }

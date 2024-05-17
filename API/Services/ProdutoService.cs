@@ -2,7 +2,7 @@ using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
 
-namespace API.Domain.Services;
+namespace API.Services;
 
 public class ProdutoService(ConnectContext context) : IProdutoService
 {

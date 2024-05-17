@@ -1,7 +1,7 @@
 using System.Text;
 using API.Domain.Interfaces;
-using API.Domain.Services;
 using API.Infrastucture.DB;
+using API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

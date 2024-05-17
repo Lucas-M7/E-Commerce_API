@@ -3,15 +3,15 @@ using API.Domain.ModelViews;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Domain.Controllers.Produtos;
+namespace API.Application.Controllers.Produtos;
 
+[Authorize]
 [ApiController]
 [Route("api/")]
 public class ProdutosController(IProdutoService produtoService) : ControllerBase
 {
     private readonly IProdutoService _produtoService = produtoService;
 
-    [Authorize]
     [HttpGet("produtos")]
     public IActionResult ListarProdutos([FromQuery] int? pagina)
     {

@@ -3,7 +3,7 @@ using API.Domain.DTOs;
 using API.Domain.ModelViews;
 using API.Infrastucture.DB;
 
-namespace API.Domain.Validations;
+namespace API.Services.Validations;
 
 public class UsuarioValidador(ConnectContext context)
 {

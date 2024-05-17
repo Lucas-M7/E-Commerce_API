@@ -4,7 +4,7 @@ using System.Text;
 using API.Domain.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace API.Domain.Token;
+namespace API.Services.Token;
 
 public class TokenGerador
 {

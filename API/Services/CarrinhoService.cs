@@ -2,7 +2,7 @@ using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
 
-namespace API.Domain.Services;
+namespace API.Services;
 
 public class CarrinhoService(ConnectContext context) : ICarrinhoService
 {
@@ -102,9 +102,7 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
         int itensPorPagina = 10;
 
         if (pagina != null)
-        {
             consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
-        }
 
         return [.. consulta];
     }

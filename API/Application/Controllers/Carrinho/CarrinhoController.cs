@@ -1,20 +1,18 @@
 using API.Domain.Interfaces;
 using API.Domain.ModelViews;
-using API.Infrastucture.DB;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Domain.Controllers.Carrinho;
+namespace API.Application.Controllers.Carrinho;
 
 [Authorize]
 [ApiController]
 [Route("api")]
-public class CarrinhoController(ConnectContext context, ICarrinhoService carrinhoService) : ControllerBase
+public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBase
 {
-    private readonly ConnectContext _context = context;
     private readonly ICarrinhoService _carrinhoService = carrinhoService;
 
-    [HttpPost("carrinho")]
+    [HttpPost("carrinho/{usuarioNome}/{produtoId}/{quantidade}")]
     public IActionResult AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
         try
@@ -28,8 +26,8 @@ public class CarrinhoController(ConnectContext context, ICarrinhoService carrinh
         }
     }
 
-    [HttpGet("carrinho")]
-    public IActionResult ListarItensNoCarrinho([FromQuery] int? pagina)
+    [HttpGet("carrinho/{pagina}")]
+    public IActionResult ListarItensNoCarrinho(int? pagina)
     {
         var itens = _carrinhoService.ListarItensNoCarrinho(pagina)
             .Select(item => new ProdutoCarrinhoModelView
@@ -45,7 +43,7 @@ public class CarrinhoController(ConnectContext context, ICarrinhoService carrinh
         return Ok(itens);
     }
 
-    [HttpDelete("carrinho")]
+    [HttpDelete("carrinho/{carrinhoId}/{quantidade}")]
     public IActionResult RemoverItemDoCarrinho(int carrinhoId, int quantidade)
     {
         try
