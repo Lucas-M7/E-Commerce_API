@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using API.Domain.Interfaces;
 using API.Infrastucture.DB;
@@ -72,8 +73,25 @@ builder.Services.AddSwaggerGen(options =>
                     Array.Empty<string>()
                 }
             });
+    #endregion
+
+    #region XML
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "E-Commerce-API",
+        Description = "Uma API baseada em funcionalidades de E-Commerce.",
+        Contact = new OpenApiContact
+        {
+            Name = "LinkedIn",
+            Url = new Uri("https://www.linkedin.com/in/lucas-mateus-142832286/")
+        }
+    });
+    #endregion
+
+    var xmlFileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFileName));
 });
-#endregion
 
 var app = builder.Build();
 

@@ -12,6 +12,11 @@ public class ProdutosController(IProdutoService produtoService) : ControllerBase
 {
     private readonly IProdutoService _produtoService = produtoService;
 
+    /// <summary>
+    /// Liste todos os produtos disponíveis.
+    /// </summary>
+    /// <param name="pagina"></param>
+    /// <returns></returns>
     [HttpGet("produtos")]
     public IActionResult ListarProdutos([FromQuery] int? pagina)
     {

@@ -18,6 +18,11 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     private readonly ConnectContext _context = context;
 
     #region Cadastro
+    /// <summary>
+    /// Crie o seu perfil de usuário informando o nome, email e senha.
+    /// </summary>
+    /// <param name="usuarioDTO"></param>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpPost("usuarios")]
     public IActionResult CriarUsuario([FromBody] UsuarioDTO usuarioDTO)
@@ -44,6 +49,11 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     #endregion
 
     #region Login
+    /// <summary>
+    /// Faça o login aqui, informando o email e senha.
+    /// </summary>
+    /// <param name="loginDTO"></param>
+    /// <returns></returns>
     [AllowAnonymous]
     [HttpPost("usuarios/login")]
     public IActionResult FazerLogin([FromBody] LoginDTO loginDTO)
@@ -68,10 +78,15 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     }
     #endregion
 
-    #region Listar
+    #region Listar 
+    /// <summary>
+    /// Liste o usuários que existem.
+    /// </summary>
+    /// <param name="pagina"></param>
+    /// <returns></returns>
     [Authorize]
-    [HttpGet("usuarios")]
-    public IActionResult ListarUsuarios([FromQuery] int? pagina)
+    [HttpGet("usuarios/")]
+    public IActionResult ListarUsuarios(int? pagina)
     {
         var usuario = new List<UsuarioModelView>();
         var usuarios = _usuarioService.ListarUsuarios(pagina);
@@ -90,6 +105,12 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     }
     #endregion
 
+    #region Apagar
+    /// <summary>
+    /// Apague o seu perfil informando o seu id.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [Authorize]
     [HttpDelete("usuarios/{id}")]
     public IActionResult ApagarUsuario(int id)
@@ -104,4 +125,5 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
             return BadRequest("Erro ao remover o usuário.");
         }
     }
+    #endregion
 }

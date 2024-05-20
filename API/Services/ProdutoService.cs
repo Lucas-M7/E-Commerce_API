@@ -12,7 +12,7 @@ public class ProdutoService(ConnectContext context) : IProdutoService
     {
         var consulta = _context.Produtos.AsQueryable();
 
-        int itensPorPagina = 10;
+        int itensPorPagina = 20;
 
         if (pagina != null)
         {

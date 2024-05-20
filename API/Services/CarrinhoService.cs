@@ -20,11 +20,16 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
                 .FirstOrDefault(c => c.UsuarioNome == usuarioNome && c.ProdutoID == produtoId);
 
             if (carrinhoProduto == null)
+            {
                 AdicionarNovoItem(usuarioNome, produto, quantidade);
+                AtualizarPrecoTotalCarrinho(usuarioNome);
+            }
             else
+            {
                 AtualizarItemExistente(carrinhoProduto, quantidade);
+                AtualizarPrecoTotalCarrinho(usuarioNome);
+            }
 
-            AtualizarPrecoTotalCarrinho(usuarioNome);
             _context.SaveChanges();
         }
         catch (FileNotFoundException ex)

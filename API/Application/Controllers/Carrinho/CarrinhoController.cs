@@ -12,6 +12,13 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
 {
     private readonly ICarrinhoService _carrinhoService = carrinhoService;
 
+    /// <summary>
+    /// Adiciona o produto desejado ao carrinho.
+    /// </summary>
+    /// <param name="usuarioNome"></param>
+    /// <param name="produtoId"></param>
+    /// <param name="quantidade"></param>
+    /// <returns></returns>
     [HttpPost("carrinho/{usuarioNome}/{produtoId}/{quantidade}")]
     public IActionResult AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
@@ -26,7 +33,12 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
         }
     }
 
-    [HttpGet("carrinho/{pagina}")]
+    /// <summary>
+    /// Retorna uma lista de até 10 produtos diferentes que estão no carrinho.
+    /// </summary>
+    /// <param name="pagina"></param>
+    /// <returns></returns>
+    [HttpGet("carrinho")]
     public IActionResult ListarItensNoCarrinho(int? pagina)
     {
         var itens = _carrinhoService.ListarItensNoCarrinho(pagina)
@@ -43,6 +55,12 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
         return Ok(itens);
     }
 
+    /// <summary>
+    /// Deleta um produto que está no carrinho de acordo com a quantidade desejada.
+    /// </summary>
+    /// <param name="carrinhoId"></param>
+    /// <param name="quantidade"></param>
+    /// <returns></returns>
     [HttpDelete("carrinho/{carrinhoId}/{quantidade}")]
     public IActionResult RemoverItemDoCarrinho(int carrinhoId, int quantidade)
     {
