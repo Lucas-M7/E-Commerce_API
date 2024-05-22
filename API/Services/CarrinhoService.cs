@@ -72,6 +72,7 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
             Total = produto.Preco * quantidade
         };
 
+        AtualizarPrecoTotalCarrinho(usuarioNome);
         _context.Carrinho.Add(carrinhoProduto);
     }
     #endregion
@@ -116,29 +117,26 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
     #region RemoverItem
     public void RemoverDoCarrinho(int id, int quantidade)
     {
-        try
-        {
-            var carrinhoItem = _context.Carrinho.FirstOrDefault(x => x.ID == id);
+        var carrinhoItem = _context.Carrinho.FirstOrDefault(x => x.ID == id);
 
-            if (carrinhoItem != null)
+        if (carrinhoItem != null)
+        {
+            if (quantidade == carrinhoItem.Quantidade)
             {
-                if (quantidade >= carrinhoItem.Quantidade)
-                {
-                    _context.Carrinho.Remove(carrinhoItem);
-                }
-                else
-                {
-                    carrinhoItem.Quantidade -= quantidade;
-                    carrinhoItem.Total = carrinhoItem.ProdutoPreco * carrinhoItem.Quantidade;
-                }
-
-                AtualizarPrecoTotalCarrinho(carrinhoItem.UsuarioNome);
-                _context.SaveChanges();
+                _context.Carrinho.Remove(carrinhoItem);
             }
-        }
-        catch
-        {
-            throw new Exception("Erro ao remover produto do carrinho.");
+            else if (quantidade > carrinhoItem.Quantidade || quantidade < carrinhoItem.Quantidade)
+            {
+                throw new Exception();
+            }
+            else
+            {
+                carrinhoItem.Quantidade -= quantidade;
+                carrinhoItem.Total = carrinhoItem.ProdutoPreco * carrinhoItem.Quantidade;
+            }
+
+            AtualizarPrecoTotalCarrinho(carrinhoItem.UsuarioNome);
+            _context.SaveChanges();
         }
     }
     #endregion

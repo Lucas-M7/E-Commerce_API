@@ -19,7 +19,7 @@ public class UsuarioService(ConnectContext context) : IUsuarioService
 
     public void Apagar(int id)
     {
-        var usuario = _context.Usuarios.FirstOrDefault(x => x.ID == id);
+        var usuario = ObterUsuario(id);
 
         if (usuario != null)
             _context.Usuarios.Remove(usuario);
@@ -46,5 +46,11 @@ public class UsuarioService(ConnectContext context) : IUsuarioService
         var usuario = _context.Usuarios.Where(x => x.Email == loginDTO.Email && x.Senha == loginDTO.Senha).FirstOrDefault();
 
         return usuario;
+    }
+
+    private UsuarioModel ObterUsuario(int id)
+    {
+        return _context.Usuarios.FirstOrDefault(u => u.ID == id)
+            ?? throw new FileNotFoundException("Usuário não encontrado.");
     }
 }
