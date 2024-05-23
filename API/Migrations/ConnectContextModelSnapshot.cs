@@ -51,7 +51,7 @@ namespace API.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Carrinho");
+                    b.ToTable("Carrinho", (string)null);
                 });
 
             modelBuilder.Entity("API.Domain.Models.ProdutoModel", b =>
@@ -85,7 +85,7 @@ namespace API.Migrations
 
                     b.HasKey("ProdutoID");
 
-                    b.ToTable("Produtos");
+                    b.ToTable("Produtos", (string)null);
                 });
 
             modelBuilder.Entity("API.Domain.Models.UsuarioModel", b =>
@@ -113,7 +113,7 @@ namespace API.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 #pragma warning restore 612, 618
         }

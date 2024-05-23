@@ -125,7 +125,7 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
             {
                 _context.Carrinho.Remove(carrinhoItem);
             }
-            else if (quantidade > carrinhoItem.Quantidade || quantidade < carrinhoItem.Quantidade)
+            else if (quantidade > carrinhoItem.Quantidade)
             {
                 throw new Exception();
             }
