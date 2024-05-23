@@ -1,6 +1,7 @@
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace API.Services;
 
@@ -137,6 +138,10 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
 
             AtualizarPrecoTotalCarrinho(carrinhoItem.UsuarioNome);
             _context.SaveChanges();
+        }
+        else
+        {
+            throw new FileNotFoundException("Carrinho não encontrado, verifique o ID");
         }
     }
     #endregion

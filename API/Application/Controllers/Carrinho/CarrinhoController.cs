@@ -71,7 +71,7 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
         }
         catch
         {
-            return BadRequest("Erro ao remover produto do carrinho.");
+            return BadRequest("Erro ao remover produto do carrinho, verifique o ID ou a quantidade.");
         }
     }
 }
