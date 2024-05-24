@@ -29,7 +29,7 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
         }
         catch
         {
-            return BadRequest("Erro ao adicionar o produto ao carrinho.");
+            return BadRequest("Erro ao adicionar o produto ao carrinho, verifique o id ou o nome de usuário.");
         }
     }
 
@@ -41,7 +41,9 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
     [HttpGet("carrinho")]
     public IActionResult ListarItensNoCarrinho(int? pagina)
     {
-        var itens = _carrinhoService.ListarItensNoCarrinho(pagina)
+        try
+        {
+            var itens = _carrinhoService.ListarItensNoCarrinho(pagina)
             .Select(item => new ProdutoCarrinhoModelView
             {
                 ID = item.ID,
@@ -52,7 +54,12 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
                 ValorDoCarrinho = item.Total
             }).ToList();
 
-        return Ok(itens);
+            return Ok(itens);
+        }
+        catch
+        {
+            return BadRequest("Erro ao listar os itens do carrinho.");
+        }
     }
 
     /// <summary>

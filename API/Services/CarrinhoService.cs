@@ -1,7 +1,6 @@
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace API.Services;
 
@@ -12,6 +11,9 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
     #region AdicionarAoCarrinho
     public void AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
+        if (string.IsNullOrEmpty(usuarioNome) || produtoId <= 0 || quantidade <=0)
+            throw new BadHttpRequestException("Parâmetro inválidos.");
+
         try
         {
             var usuario = ObterUsuario(usuarioNome);
@@ -49,10 +51,18 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
     #endregion
 
     #region ObterProduto
-    private ProdutoModel ObterProduto(int produtoId)
+    protected ProdutoModel ObterProduto(int produtoId)
     {
         return _context.Produtos.FirstOrDefault(p => p.ProdutoID == produtoId)
             ?? throw new FileNotFoundException("Produto não encontrado.");
+    }
+    #endregion
+
+    #region ObterCarrinho
+    private CarrinhoModel ObterCarrinho(int carrinhoId)
+    {
+        return _context.Carrinho.FirstOrDefault(x => x.ID == carrinhoId)
+            ?? throw new FileNotFoundException("Carrinho não encontrado.");
     }
     #endregion
 
@@ -108,7 +118,7 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
 
         int itensPorPagina = 10;
 
-        if (pagina != null)
+        if (pagina != null && pagina > 0)
             consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
 
         return [.. consulta];
@@ -118,7 +128,10 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
     #region RemoverItem
     public void RemoverDoCarrinho(int id, int quantidade)
     {
-        var carrinhoItem = _context.Carrinho.FirstOrDefault(x => x.ID == id);
+        if (id <= 0 || quantidade <=0)
+            throw new BadHttpRequestException("Parâmetro inválido.");
+
+        var carrinhoItem = ObterCarrinho(id);
 
         if (carrinhoItem != null)
         {
@@ -127,9 +140,7 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
                 _context.Carrinho.Remove(carrinhoItem);
             }
             else if (quantidade > carrinhoItem.Quantidade)
-            {
-                throw new Exception();
-            }
+                throw new BadHttpRequestException("Quantidade inválida.");
             else
             {
                 carrinhoItem.Quantidade -= quantidade;

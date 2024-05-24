@@ -1,11 +1,9 @@
 using API.Domain.Interfaces;
 using API.Domain.ModelViews;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Application.Controllers.Produtos;
 
-[Authorize]
 [ApiController]
 [Route("api/")]
 public class ProdutosController(IProdutoService produtoService) : ControllerBase
@@ -13,7 +11,7 @@ public class ProdutosController(IProdutoService produtoService) : ControllerBase
     private readonly IProdutoService _produtoService = produtoService;
 
     /// <summary>
-    /// Liste todos os produtos disponíveis.
+    /// Lista todos os produtos disponíveis.
     /// </summary>
     /// <param name="pagina"></param>
     /// <returns></returns>

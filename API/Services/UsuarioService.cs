@@ -33,7 +33,7 @@ public class UsuarioService(ConnectContext context) : IUsuarioService
 
         int itensPorPagina = 10;
 
-        if (pagina != null)
+        if (pagina != null && pagina > 0)
         {
             consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
         }
@@ -51,6 +51,6 @@ public class UsuarioService(ConnectContext context) : IUsuarioService
     private UsuarioModel ObterUsuario(int id)
     {
         return _context.Usuarios.FirstOrDefault(u => u.ID == id)
-            ?? throw new FileNotFoundException("Usuário não encontrado.");
+            ?? throw new HttpRequestException("Usuário não encontrado.");
     }
 }
