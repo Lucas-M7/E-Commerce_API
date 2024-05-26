@@ -8,7 +8,7 @@ public class WishlistService(ConnectContext context) : IWishlistService
 {
     private readonly ConnectContext _context = context;
 
-    public void AdicionarNaLista(int produtoId)
+    public void AdicionarProdutoNaLista(int produtoId)
     {
         if (produtoId <= 0)
             throw new BadHttpRequestException("Parâmetro inválidos.");
@@ -20,7 +20,7 @@ public class WishlistService(ConnectContext context) : IWishlistService
         if (listaProduto == null)
             AdicionarNovoItem(produto);
 
-        _context.SaveChanges();        
+        _context.SaveChanges();
     }
 
     private void AdicionarNovoItem(ProdutoModel produto)
@@ -41,7 +41,13 @@ public class WishlistService(ConnectContext context) : IWishlistService
             ?? throw new FileNotFoundException("Produto não encontrado.");
     }
 
-    public List<WishlistModel> ListaDeDesejo(int? pagina = 1)
+    private WishlistModel ObterIdDaLista(int id)
+    {
+        return _context.Wishlist.FirstOrDefault(x => x.Id == id)
+            ?? throw new FileNotFoundException("Id não encontrado.");
+    }
+
+    public List<WishlistModel> ListarItensDesejados(int? pagina = 1)
     {
         var consulta = _context.Wishlist.AsQueryable();
 
@@ -53,8 +59,14 @@ public class WishlistService(ConnectContext context) : IWishlistService
         return [.. consulta];
     }
 
-    public void RemoverDaLista(int produtoId)
+    public void RemoverProdutoDaLista(int listaId)
     {
-        throw new NotImplementedException();
+        if (listaId <= 0)
+            throw new BadHttpRequestException("Parâmetro inválido.");
+
+        var idDaLista = ObterIdDaLista(listaId);
+
+        _context.Remove(idDaLista);
+        _context.SaveChanges();
     }
 }

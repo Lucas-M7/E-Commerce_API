@@ -4,7 +4,7 @@ namespace API.Domain.Interfaces;
 
 public interface IWishlistService
 {
-    void AdicionarNaLista(int produtoId);
-    void RemoverDaLista(int produtoId);
-    List<WishlistModel> ListaDeDesejo(int? pagina);
+    void AdicionarProdutoNaLista(int produtoId);
+    void RemoverProdutoDaLista(int listaId);
+    List<WishlistModel> ListarItensDesejados(int? pagina);
 }
