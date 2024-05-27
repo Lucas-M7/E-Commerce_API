@@ -20,7 +20,7 @@ public class UsuarioValidador(ConnectContext context)
         string padraoDoNome = @"^[a-zA-Z]+$";
 
         if (!Regex.IsMatch(usuarioDTO.Email, padraoDoEmail))
-            validacao.Mensagens.Add("Email inválido. Não utilize caracteres inválidos.");
+            validacao.Mensagens.Add("Email inválido. Não utilize caracteres inválidos.");   
 
         if (_context.Usuarios.Any(x => x.Email == usuarioDTO.Email))
             validacao.Mensagens.Add("Esse email já está sendo utilizado por outro usuário");

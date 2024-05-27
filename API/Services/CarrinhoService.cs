@@ -11,7 +11,7 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
     #region AdicionarAoCarrinho
     public void AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
-        if (string.IsNullOrEmpty(usuarioNome) || produtoId <= 0 || quantidade <=0)
+        if (string.IsNullOrEmpty(usuarioNome) || produtoId <= 0 || quantidade <= 0)
             throw new BadHttpRequestException("Parâmetro inválidos.");
 
         try
@@ -39,6 +39,48 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
         {
             throw new BadHttpRequestException(ex.Message);
         }
+    }
+    #endregion
+
+    #region ListarItens
+    public List<CarrinhoModel> ListarItensNoCarrinho(int? pagina = 1)
+    {
+        var consulta = _context.Carrinho.AsQueryable();
+
+        int itensPorPagina = 10;
+
+        if (pagina != null && pagina > 0)
+            consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
+
+        return [.. consulta];
+    }
+    #endregion
+
+    #region RemoverItem
+    public void RemoverDoCarrinho(int id, int quantidade)
+    {
+        if (id <= 0 || quantidade <= 0)
+            throw new BadHttpRequestException("Parâmetro inválido.");
+
+        var carrinhoItem = ObterCarrinho(id);
+
+        if (carrinhoItem != null)
+        {
+            if (quantidade == carrinhoItem.Quantidade)
+                _context.Carrinho.Remove(carrinhoItem);
+            else if (quantidade > carrinhoItem.Quantidade)
+                throw new BadHttpRequestException("Quantidade inválida.");
+            else
+            {
+                carrinhoItem.Quantidade -= quantidade;
+                carrinhoItem.Total = carrinhoItem.ProdutoPreco * carrinhoItem.Quantidade;
+            }
+
+            AtualizarPrecoTotalCarrinho(carrinhoItem.UsuarioNome);
+            _context.SaveChanges();
+        }
+        else
+            throw new FileNotFoundException("Carrinho não encontrado, verifique o ID");
     }
     #endregion
 
@@ -107,52 +149,6 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
         foreach (var item in carrinhoItens)
         {
             item.Total = totalCarrinho;
-        }
-    }
-    #endregion
-
-    #region ListarItens
-    public List<CarrinhoModel> ListarItensNoCarrinho(int? pagina = 1)
-    {
-        var consulta = _context.Carrinho.AsQueryable();
-
-        int itensPorPagina = 10;
-
-        if (pagina != null && pagina > 0)
-            consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
-
-        return [.. consulta];
-    }
-    #endregion
-
-    #region RemoverItem
-    public void RemoverDoCarrinho(int id, int quantidade)
-    {
-        if (id <= 0 || quantidade <=0)
-            throw new BadHttpRequestException("Parâmetro inválido.");
-
-        var carrinhoItem = ObterCarrinho(id);
-
-        if (carrinhoItem != null)
-        {
-            if (quantidade == carrinhoItem.Quantidade)
-            {
-                _context.Carrinho.Remove(carrinhoItem);
-            }
-            else if (quantidade > carrinhoItem.Quantidade)
-                throw new BadHttpRequestException("Quantidade inválida.");
-            else
-            {
-                carrinhoItem.Quantidade -= quantidade;
-                carrinhoItem.Total = carrinhoItem.ProdutoPreco * carrinhoItem.Quantidade;
-            }
-
-            AtualizarPrecoTotalCarrinho(carrinhoItem.UsuarioNome);
-            _context.SaveChanges();
-        }
-        else
-        {
-            throw new FileNotFoundException("Carrinho não encontrado, verifique o ID");
         }
     }
     #endregion

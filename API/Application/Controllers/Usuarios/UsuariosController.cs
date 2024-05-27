@@ -19,7 +19,7 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
 
     #region Cadastro
     /// <summary>
-    /// Crie o seu perfil de usuário informando o nome, email e senha.
+    /// Criar perfil de usuário informando o nome, email e senha.
     /// </summary>
     /// <param name="usuarioDTO"></param>
     /// <returns></returns>
@@ -31,9 +31,7 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
         var validacao = validacaoUsuario.UsuarioValidacao(usuarioDTO);
 
         if (validacao.Mensagens.Count > 0)
-            return BadRequest(new ErrorValidacao {
-                Mensagens = validacao.Mensagens
-            });
+            return BadRequest(validacao);
 
         var usuario = new UsuarioModel
         {
@@ -44,13 +42,18 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
 
         _usuarioService.Adicionar(usuario);
 
-        return Ok();
+        return Created($"/usuario/{usuario.ID}", new UsuarioModelView
+        {
+            ID = usuario.ID,
+            Email = usuario.Email,
+            Nome = usuario.Nome
+        });
     }
     #endregion
 
     #region Login
     /// <summary>
-    /// Faça o login aqui, informando o email e senha.
+    /// Fazer login informando o email e senha.
     /// </summary>
     /// <param name="loginDTO"></param>
     /// <returns></returns>
@@ -72,15 +75,13 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
             });
         }
         else
-        {
-            return Unauthorized();
-        }
+            return Unauthorized("Erro ao fazer login, verifique o email e senha, caso não possua uma conta, crie uma.");
     }
     #endregion
 
     #region Listar 
     /// <summary>
-    /// Liste o usuários que existem.
+    /// Listar usuários existentes.
     /// </summary>
     /// <param name="pagina"></param>
     /// <returns></returns>
@@ -107,7 +108,7 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
 
     #region Apagar
     /// <summary>
-    /// Apague o seu perfil informando o seu id.
+    /// Apagar o perfil informando o id.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -115,15 +116,11 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     [HttpDelete("usuarios/{id}")]
     public IActionResult ApagarUsuario(int id)
     {
-        try
-        {
-            _usuarioService.Apagar(id);
-            return Ok("Usuario removido com sucesso.");
-        }
-        catch
-        {
-            return BadRequest("Erro ao remover o usuário.");
-        }
+        if (_context.Usuarios.Any(x => x.ID != id))
+            return NotFound("Usuário não encontrado, verifique o ID."); 
+
+        _usuarioService.Apagar(id);
+        return Ok("Usuário removido com sucesso.");    
     }
     #endregion
 }

@@ -23,6 +23,29 @@ public class WishlistService(ConnectContext context) : IWishlistService
         _context.SaveChanges();
     }
 
+    public List<WishlistModel> ListarItensDesejados(int? pagina = 1)
+    {
+        var consulta = _context.Wishlist.AsQueryable();
+
+        int itensPorPagina = 10;
+
+        if (pagina != null && pagina > 0)
+            consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
+
+        return [.. consulta];
+    }
+
+    public void RemoverProdutoDaLista(int listaId)
+    {
+        if (listaId <= 0)
+            throw new BadHttpRequestException("Parâmetro inválido.");
+
+        var idDaLista = ObterIdDaLista(listaId);
+
+        _context.Remove(idDaLista);
+        _context.SaveChanges();
+    }
+
     private void AdicionarNovoItem(ProdutoModel produto)
     {
         var desejoProduto = new WishlistModel
@@ -45,28 +68,5 @@ public class WishlistService(ConnectContext context) : IWishlistService
     {
         return _context.Wishlist.FirstOrDefault(x => x.Id == id)
             ?? throw new FileNotFoundException("Id não encontrado.");
-    }
-
-    public List<WishlistModel> ListarItensDesejados(int? pagina = 1)
-    {
-        var consulta = _context.Wishlist.AsQueryable();
-
-        int itensPorPagina = 10;
-
-        if (pagina != null && pagina > 0)
-            consulta = consulta.Skip(((int)pagina - 1) * itensPorPagina).Take(itensPorPagina);
-
-        return [.. consulta];
-    }
-
-    public void RemoverProdutoDaLista(int listaId)
-    {
-        if (listaId <= 0)
-            throw new BadHttpRequestException("Parâmetro inválido.");
-
-        var idDaLista = ObterIdDaLista(listaId);
-
-        _context.Remove(idDaLista);
-        _context.SaveChanges();
     }
 }

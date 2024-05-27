@@ -12,6 +12,11 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
 {
     private readonly IWishlistService _wishhList = wishlist;
 
+    /// <summary>
+    /// Adicionar o produto desejado na lista de desejos.
+    /// </summary>
+    /// <param name="produtoId"></param>
+    /// <returns></returns>
     [HttpPost("WishList/{produtoId}")]
     public IActionResult AdicionarNaLista(int produtoId)
     {
@@ -19,6 +24,11 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
         return Ok("Produto adicionado a lista de desejo.");
     }
 
+    /// <summary>
+    /// Lista itens que estão na lista de desejo.
+    /// </summary>
+    /// <param name="pagina"></param>
+    /// <returns></returns>
     [HttpGet("WishList")]
     public IActionResult ListarItensDesejados(int? pagina)
     {
@@ -34,6 +44,11 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
         return Ok(itens);
     }
 
+    /// <summary>
+    /// Remove o item da lista de desejo.
+    /// </summary>
+    /// <param name="listaId"></param>
+    /// <returns></returns>
     [HttpDelete("WishList/{listaId}")]
     public IActionResult RemoverItenDaListaDeDesejo(int listaId)
     {
