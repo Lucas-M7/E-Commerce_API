@@ -32,7 +32,7 @@ public class UsuarioValidador(ConnectContext context)
             validacao.Mensagens.Add("Esse nome já está sendo utilizado por outro usuário.");
 
          if (string.IsNullOrEmpty(usuarioDTO.Senha) || usuarioDTO.Senha.Length < 4)
-            validacao.Mensagens.Add("Check that the password is empty or has at least 4 characters.");
+            validacao.Mensagens.Add("Verifique se a senha tem pelo menos 4 caractéres.");
 
         return validacao;      
     }

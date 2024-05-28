@@ -116,11 +116,12 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     [HttpDelete("usuarios/{id}")]
     public IActionResult ApagarUsuario(int id)
     {
-        if (_context.Usuarios.Any(x => x.ID != id))
-            return NotFound("Usuário não encontrado, verifique o ID."); 
-
-        _usuarioService.Apagar(id);
-        return Ok("Usuário removido com sucesso.");    
+        if (_context.Usuarios.Any(x => x.ID == id))
+        {
+            _usuarioService.Apagar(id);
+            return Ok("Usuário removido com sucesso.");
+        }
+        return NotFound("Usuário não encontrado, verifique o ID.");
     }
     #endregion
 }

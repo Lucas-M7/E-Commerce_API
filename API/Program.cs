@@ -3,6 +3,7 @@ using System.Text;
 using API.Domain.Interfaces;
 using API.Infrastucture.DB;
 using API.Services;
+using API.Services.Validations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -15,6 +16,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
+builder.Services.AddScoped<IPagamentoServico, PagamentoServico>();
+builder.Services.AddScoped<IPedidoServico, PedidoServico>();
 #endregion
 
 #region TokenJWT
@@ -45,6 +48,11 @@ builder.Services.AddDbContext<ConnectContext>(options =>
 #endregion
 
 builder.Services.AddControllers();
+
+builder.Services.AddTransient<IPagamentoServico, PagamentoServico>();
+builder.Services.AddTransient<IPedidoServico, PedidoServico>();
+builder.Services.AddTransient<PagamentoValidador>();
+
 builder.Services.AddEndpointsApiExplorer();
 
 #region Autorização

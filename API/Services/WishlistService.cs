@@ -58,7 +58,7 @@ public class WishlistService(ConnectContext context) : IWishlistService
         _context.Wishlist.Add(desejoProduto);
     }
 
-    private ProdutoModel ObterProduto(int produtoId)
+    protected ProdutoModel ObterProduto(int produtoId)
     {
         return _context.Produtos.FirstOrDefault(p => p.ProdutoID == produtoId)
             ?? throw new FileNotFoundException("Produto não encontrado.");
