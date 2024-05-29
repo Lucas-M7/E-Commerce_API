@@ -1,4 +1,3 @@
-using API.Domain.DTOs;
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -9,11 +8,17 @@ namespace API.Application.Controllers.Pedidos;
 [Authorize]
 [ApiController]
 [Route("api/")]
-public class PedidosController(IPagamentoServico pagamentoServico, IPedidoServico pedidoServico) : ControllerBase
+public class PedidosController(IPagamentoService pagamentoServico, IPedidoService pedidoServico) : ControllerBase
 {
-    private readonly IPagamentoServico _pagamentoServico = pagamentoServico;
-    private readonly IPedidoServico _pedidoServico = pedidoServico;
+    private readonly IPagamentoService _pagamentoServico = pagamentoServico;
+    private readonly IPedidoService _pedidoServico = pedidoServico;
 
+    /// <summary>
+    /// Realização do pedido com aprovação na mesma hora.
+    /// </summary>
+    /// <param name="solicitacao"></param>
+    /// <param name="produtoId"></param>
+    /// <returns></returns>
     [HttpPost("pedidos/{produtoId}")]
     public IActionResult CriacaoDoPedido([FromBody] PagamentoSolicitacaoModel solicitacao, int produtoId)
     {

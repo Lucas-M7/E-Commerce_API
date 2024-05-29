@@ -4,7 +4,7 @@ using API.Domain.Models;
 
 namespace API.Services;
 
-public class PedidoServico : IPedidoServico
+public class PedidoService : IPedidoService
 {
     private static List<PedidosModel> _pedidos = [];
     

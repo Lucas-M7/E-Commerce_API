@@ -1,10 +1,9 @@
-using API.Domain.DTOs;
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Services.Validations;
 
 namespace API.Services;
-public class PagamentoServico(PagamentoValidador validador) : IPagamentoServico
+public class PagamentoService(PagamentoValidador validador) : IPagamentoService
 {
     private readonly PagamentoValidador _validador = validador;
 
@@ -18,7 +17,7 @@ public class PagamentoServico(PagamentoValidador validador) : IPagamentoServico
             {
                 Sucesso = false,
                 TransacaoId = string.Empty,
-                Mensagem = string.Join("; ", validacao.Mensagens)
+                Mensagem = string.Join(" ", validacao.Mensagens)
             });
         }
 

@@ -16,8 +16,8 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
-builder.Services.AddScoped<IPagamentoServico, PagamentoServico>();
-builder.Services.AddScoped<IPedidoServico, PedidoServico>();
+builder.Services.AddScoped<IPagamentoService, PagamentoService>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
 #endregion
 
 #region TokenJWT
@@ -49,8 +49,8 @@ builder.Services.AddDbContext<ConnectContext>(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddTransient<IPagamentoServico, PagamentoServico>();
-builder.Services.AddTransient<IPedidoServico, PedidoServico>();
+builder.Services.AddTransient<IPagamentoService, PagamentoService>();
+builder.Services.AddTransient<IPedidoService, PedidoService>();
 builder.Services.AddTransient<PagamentoValidador>();
 
 builder.Services.AddEndpointsApiExplorer();

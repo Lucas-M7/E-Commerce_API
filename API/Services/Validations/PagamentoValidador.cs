@@ -1,4 +1,3 @@
-using API.Domain.DTOs;
 using API.Domain.Models;
 using API.Domain.ModelViews;
 using API.Infrastucture.DB;
@@ -7,7 +6,6 @@ namespace API.Services.Validations;
 
 public class PagamentoValidador(ConnectContext context) : WishlistService(context)
 {
-    private readonly ConnectContext _context = context;
 
     public ErrorValidacao PagamentoValidacao(PagamentoSolicitacaoModel solicitacao, int produtoId)
     {
@@ -16,8 +14,8 @@ public class PagamentoValidador(ConnectContext context) : WishlistService(contex
             Mensagens = []
         };
 
-        if (string.IsNullOrEmpty(solicitacao.NumeroCartao) || solicitacao.NumeroCartao.Length > 16)
-            validacao.Mensagens.Add("O número do cartão não pode ficar vazio ou maior que 16 caractéres.");
+        if (string.IsNullOrEmpty(solicitacao.NumeroCartao) || solicitacao.NumeroCartao.Length > 16 || solicitacao.NumeroCartao.Length < 15)
+            validacao.Mensagens.Add("Cartão inválido.");
 
         if (string.IsNullOrEmpty(solicitacao.NomeTitular))
             validacao.Mensagens.Add("O nome do títular não pode ficar vazio.");
