@@ -17,8 +17,8 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
     /// </summary>
     /// <param name="produtoId"></param>
     /// <returns></returns>
-    [HttpPost("WishList/{produtoId}")]
-    public IActionResult AdicionarNaLista(int produtoId)
+    [HttpPost("wishlist/{produtoId}")]
+    public IActionResult AdicionarNaLista([FromRoute] int produtoId)
     {
         _wishhList.AdicionarProdutoNaLista(produtoId);
         return Ok("Produto adicionado a lista de desejo.");
@@ -29,8 +29,8 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
     /// </summary>
     /// <param name="pagina"></param>
     /// <returns></returns>
-    [HttpGet("WishList")]
-    public IActionResult ListarItensDesejados(int? pagina)
+    [HttpGet("wishlist/")]
+    public IActionResult ListarItensDesejados([FromQuery] int? pagina)
     {
         var itens = _wishhList.ListarItensDesejados(pagina)
         .Select(item => new WishListModelView
@@ -49,8 +49,8 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
     /// </summary>
     /// <param name="listaId"></param>
     /// <returns></returns>
-    [HttpDelete("WishList/{listaId}")]
-    public IActionResult RemoverItenDaListaDeDesejo(int listaId)
+    [HttpDelete("wishlist/{listaId}")]
+    public IActionResult RemoverItenDaListaDeDesejo([FromRoute] int listaId)
     {
         _wishhList.RemoverProdutoDaLista(listaId);
         return Ok("Produto removido da lista de desejo.");

@@ -41,7 +41,7 @@ public class PedidosController(IPagamentoService pagamentoServico, IPedidoServic
             _pedidoServico.AtualizarPedido(pedidoCriado);
             return Ok(new 
             {
-                PedidoId = pedidoCriado.Id, Mensagem = "Pedido criado e pago com sucesso."
+                PedidoId = pedidoCriado.Id, Mensagem = "criado e pago com sucesso."
             });
         }
         else

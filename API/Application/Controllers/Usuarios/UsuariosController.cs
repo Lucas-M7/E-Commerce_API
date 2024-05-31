@@ -87,7 +87,7 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     /// <returns></returns>
     [Authorize]
     [HttpGet("usuarios/")]
-    public IActionResult ListarUsuarios(int? pagina)
+    public IActionResult ListarUsuarios([FromQuery] int? pagina)
     {
         var usuario = new List<UsuarioModelView>();
         var usuarios = _usuarioService.ListarUsuarios(pagina);
@@ -114,7 +114,7 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
     /// <returns></returns>
     [Authorize]
     [HttpDelete("usuarios/{id}")]
-    public IActionResult ApagarUsuario(int id)
+    public IActionResult ApagarUsuario([FromRoute] int id)
     {
         if (_context.Usuarios.Any(x => x.ID == id))
         {

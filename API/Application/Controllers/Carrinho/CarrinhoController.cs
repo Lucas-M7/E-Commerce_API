@@ -20,7 +20,7 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
     /// <param name="quantidade"></param>
     /// <returns></returns>
     [HttpPost("carrinho/{usuarioNome}/{produtoId}/{quantidade}")]
-    public IActionResult AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
+    public IActionResult AdicionarAoCarrinho([FromRoute] string usuarioNome, int produtoId, int quantidade)
     {
         try
         {
@@ -39,7 +39,7 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
     /// <param name="pagina"></param>
     /// <returns></returns>
     [HttpGet("carrinho")]
-    public IActionResult ListarItensNoCarrinho(int? pagina)
+    public IActionResult ListarItensNoCarrinho([FromQuery] int? pagina)
     {
         try
         {
@@ -69,7 +69,7 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
     /// <param name="quantidade"></param>
     /// <returns></returns>
     [HttpDelete("carrinho/{carrinhoId}/{quantidade}")]
-    public IActionResult RemoverItemDoCarrinho(int carrinhoId, int quantidade)
+    public IActionResult RemoverItemDoCarrinho([FromRoute] int carrinhoId, int quantidade)
     {
         try
         {
