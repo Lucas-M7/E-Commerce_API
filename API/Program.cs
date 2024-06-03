@@ -18,6 +18,7 @@ builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IPagamentoService, PagamentoService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
+builder.Services.AddScoped<CarrinhoValidador>();
 #endregion
 
 #region TokenJWT

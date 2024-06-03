@@ -15,7 +15,7 @@ public class PagamentoValidador(ConnectContext context) : WishlistService(contex
         };
 
         if (string.IsNullOrEmpty(solicitacao.NumeroCartao) || solicitacao.NumeroCartao.Length > 16 || solicitacao.NumeroCartao.Length < 15)
-            validacao.Mensagens.Add("Cartão inválido.");
+            validacao.Mensagens.Add("Cartão inválido, digite somente números, sem espaços.");
 
         if (string.IsNullOrEmpty(solicitacao.NomeTitular))
             validacao.Mensagens.Add("O nome do títular não pode ficar vazio.");

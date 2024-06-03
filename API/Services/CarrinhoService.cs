@@ -1,18 +1,21 @@
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
+using API.Services.Validations;
 
 namespace API.Services;
 
-public class CarrinhoService(ConnectContext context) : ICarrinhoService
+public class CarrinhoService(ConnectContext context, CarrinhoValidador carrinhoValidador) : ICarrinhoService
 {
     private readonly ConnectContext _context = context;
+    private readonly CarrinhoValidador _carrinhoValidador = carrinhoValidador;
 
     #region AdicionarAoCarrinho
     public void AdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
-        if (string.IsNullOrEmpty(usuarioNome) || produtoId <= 0 || quantidade <= 0)
-            throw new BadHttpRequestException("Parâmetro inválidos.");
+        var validacao = _carrinhoValidador.ValidacaoAdicionarAoCarrinho(usuarioNome, produtoId, quantidade);
+        if (validacao.Mensagens.Count != 0)
+            throw new BadHttpRequestException(string.Join("; ", validacao.Mensagens));
 
         try
         {
@@ -59,8 +62,10 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
     #region RemoverItem
     public void RemoverDoCarrinho(int id, int quantidade)
     {
-        if (id <= 0 || quantidade <= 0)
-            throw new BadHttpRequestException("Parâmetro inválido.");
+
+        var validacao = _carrinhoValidador.ValidarRemoverDoCarrinho(id, quantidade);
+        if (validacao.Mensagens.Count != 0)
+            throw new BadHttpRequestException(string.Join("; ", validacao.Mensagens));
 
         var carrinhoItem = ObterCarrinho(id);
 
@@ -68,8 +73,6 @@ public class CarrinhoService(ConnectContext context) : ICarrinhoService
         {
             if (quantidade == carrinhoItem.Quantidade)
                 _context.Carrinho.Remove(carrinhoItem);
-            else if (quantidade > carrinhoItem.Quantidade)
-                throw new BadHttpRequestException("Quantidade inválida.");
             else
             {
                 carrinhoItem.Quantidade -= quantidade;

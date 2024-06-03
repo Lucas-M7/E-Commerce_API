@@ -1,5 +1,7 @@
 using API.Domain.Interfaces;
 using API.Domain.ModelViews;
+using API.Infrastucture.DB;
+using API.Services.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +10,10 @@ namespace API.Application.Controllers.Carrinho;
 [Authorize]
 [ApiController]
 [Route("api")]
-public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBase
+public class CarrinhoController(ICarrinhoService carrinhoService, ConnectContext context) : ControllerBase
 {
     private readonly ICarrinhoService _carrinhoService = carrinhoService;
+    private readonly ConnectContext _context = context;
 
     /// <summary>
     /// Adiciona o produto desejado ao carrinho.
@@ -22,15 +25,15 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
     [HttpPost("carrinho/{usuarioNome}/{produtoId}/{quantidade}")]
     public IActionResult AdicionarAoCarrinho([FromRoute] string usuarioNome, int produtoId, int quantidade)
     {
-        try
-        {
-            _carrinhoService.AdicionarAoCarrinho(usuarioNome, produtoId, quantidade);
-            return Ok("Item adicionado ao carrinho com sucesso.");
-        }
-        catch
-        {
-            return BadRequest("Erro ao adicionar o produto ao carrinho, verifique o id ou o nome de usuário.");
-        }
+        var validacaoCarrinho = new CarrinhoValidador(_context);
+        var validacao = validacaoCarrinho.ValidacaoAdicionarAoCarrinho(usuarioNome, produtoId, quantidade);
+
+        if (validacao.Mensagens.Count > 0)
+            return BadRequest(validacao);
+
+        _carrinhoService.AdicionarAoCarrinho(usuarioNome, produtoId, quantidade);
+
+        return Ok("Produto adicionado ao carrinho com sucesso.");
     }
 
     /// <summary>
@@ -71,14 +74,15 @@ public class CarrinhoController(ICarrinhoService carrinhoService) : ControllerBa
     [HttpDelete("carrinho/{carrinhoId}/{quantidade}")]
     public IActionResult RemoverItemDoCarrinho([FromRoute] int carrinhoId, int quantidade)
     {
-        try
-        {
-            _carrinhoService.RemoverDoCarrinho(carrinhoId, quantidade);
-            return Ok("Produto removido com sucesso.");
-        }
-        catch
-        {
-            return BadRequest("Erro ao remover produto do carrinho, verifique o ID ou a quantidade.");
-        }
+
+        var carrinhoValidacao = new CarrinhoValidador(_context);
+        var validacao = carrinhoValidacao.ValidarRemoverDoCarrinho(carrinhoId, quantidade);
+
+        if (validacao.Mensagens.Count > 0)
+            return BadRequest(validacao);
+
+        _carrinhoService.RemoverDoCarrinho(carrinhoId, quantidade);
+
+        return Ok("Produto removido do carrinho com sucesso");
     }
 }
