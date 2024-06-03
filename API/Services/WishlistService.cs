@@ -1,17 +1,20 @@
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
+using API.Services.Validations;
 
 namespace API.Services;
 
-public class WishlistService(ConnectContext context) : IWishlistService
+public class WishlistService(ConnectContext context, WishlistValidador wishlistValidador) : IWishlistService
 {
     private readonly ConnectContext _context = context;
+    private readonly WishlistValidador _wishlistValidador = wishlistValidador;
 
     public void AdicionarProdutoNaLista(int produtoId)
     {
-        if (produtoId <= 0)
-            throw new BadHttpRequestException("Parâmetro inválidos.");
+        var validacao = _wishlistValidador.ValidacaoAdicionarALista(produtoId);
+        if (validacao.Mensagens.Count != 0)
+            throw new BadHttpRequestException(string.Join("; ", validacao.Mensagens));
 
         var produto = ObterProduto(produtoId);
         var listaProduto = _context.Wishlist
@@ -37,8 +40,9 @@ public class WishlistService(ConnectContext context) : IWishlistService
 
     public void RemoverProdutoDaLista(int listaId)
     {
-        if (listaId <= 0)
-            throw new BadHttpRequestException("Parâmetro inválido.");
+        var validacao = _wishlistValidador.ValidacaoRemoverDaLista(listaId);
+        if (validacao.Mensagens.Count != 0)
+            throw new BadHttpRequestException(string.Join("; ", validacao.Mensagens));
 
         var idDaLista = ObterIdDaLista(listaId);
 

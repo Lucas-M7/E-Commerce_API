@@ -1,5 +1,7 @@
 using API.Domain.Interfaces;
 using API.Domain.ModelViews;
+using API.Infrastucture.DB;
+using API.Services.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +10,10 @@ namespace API.Application.Controllers.Wishlist;
 [Authorize]
 [ApiController]
 [Route("api/")]
-public class WishListController(IWishlistService wishlist) : ControllerBase
+public class WishListController(IWishlistService wishlist, ConnectContext context) : ControllerBase
 {
     private readonly IWishlistService _wishhList = wishlist;
+    private readonly ConnectContext _context = context;
 
     /// <summary>
     /// Adicionar o produto desejado na lista de desejos.
@@ -20,6 +23,12 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
     [HttpPost("wishlist/{produtoId}")]
     public IActionResult AdicionarNaLista([FromRoute] int produtoId)
     {
+        var validacaoLista = new WishlistValidador(_context);
+        var validacao = validacaoLista.ValidacaoAdicionarALista(produtoId);
+
+        if (validacao.Mensagens.Count > 0)
+            return BadRequest(validacao);
+
         _wishhList.AdicionarProdutoNaLista(produtoId);
         return Ok("Produto adicionado a lista de desejo.");
     }
@@ -52,6 +61,9 @@ public class WishListController(IWishlistService wishlist) : ControllerBase
     [HttpDelete("wishlist/{listaId}")]
     public IActionResult RemoverItenDaListaDeDesejo([FromRoute] int listaId)
     {
+        var validacaoLista = new WishlistValidador(_context);
+        var validacao = validacaoLista.ValidacaoRemoverDaLista(listaId);
+
         _wishhList.RemoverProdutoDaLista(listaId);
         return Ok("Produto removido da lista de desejo.");
     }

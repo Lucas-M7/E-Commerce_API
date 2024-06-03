@@ -4,7 +4,7 @@ using API.Infrastucture.DB;
 
 namespace API.Services.Validations;
 
-public class PagamentoValidador(ConnectContext context) : WishlistService(context)
+public class PagamentoValidador(ConnectContext context, WishlistValidador wishlistValidador) : WishlistService(context, wishlistValidador)
 {
 
     public ErrorValidacao PagamentoValidacao(PagamentoSolicitacaoModel solicitacao, int produtoId)
