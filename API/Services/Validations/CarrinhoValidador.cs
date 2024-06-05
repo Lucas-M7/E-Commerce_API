@@ -48,7 +48,7 @@ public class CarrinhoValidador(ConnectContext context)
 
         var carrinhoItem = _context.Carrinho.FirstOrDefault(c => c.ID == carrinhoId);
         if (carrinhoItem == null)
-            validacao.Mensagens.Add("Item do carrinho não encontrado.");
+            validacao.Mensagens.Add("Carrinho não encontrado.");
 
         if (carrinhoItem != null && quantidade > carrinhoItem.Quantidade)
             validacao.Mensagens.Add("Quantidade inválida. A quantidade a remover é maior do que a disponível no carrinho.");

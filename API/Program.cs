@@ -16,8 +16,6 @@ builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
-builder.Services.AddScoped<IPagamentoService, PagamentoService>();
-builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<CarrinhoValidador>();
 builder.Services.AddScoped<WishlistValidador>();
 #endregion
@@ -50,10 +48,6 @@ builder.Services.AddDbContext<ConnectContext>(options =>
 #endregion
 
 builder.Services.AddControllers();
-
-builder.Services.AddTransient<IPagamentoService, PagamentoService>();
-builder.Services.AddTransient<IPedidoService, PedidoService>();
-builder.Services.AddTransient<PagamentoValidador>();
 
 builder.Services.AddEndpointsApiExplorer();
 

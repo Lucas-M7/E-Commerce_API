@@ -1,4 +1,3 @@
-using System.ComponentModel.Design;
 using API.Domain.ModelViews;
 using API.Infrastucture.DB;
 
