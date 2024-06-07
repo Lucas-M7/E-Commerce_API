@@ -12,37 +12,37 @@ namespace API.Application.Controller;
 
 [ApiController]
 [Route("api/")]
-public class UsuariosController(IUsuarioService usuarioService, ConnectContext context) : ControllerBase
+public class UsersController(IUsuarioService usuarioService, ConnectContext context) : ControllerBase
 {
     private readonly IUsuarioService _usuarioService = usuarioService;
     private readonly ConnectContext _context = context;
 
     #region Cadastro
     /// <summary>
-    /// Criar perfil de usuário informando o nome, email e senha.
+    /// Create a user profile by entering your name, email address and password.
     /// </summary>
-    /// <param name="usuarioDTO"></param>
+    /// <param name="userDTO"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost("usuarios")]
-    public IActionResult CriarUsuario([FromBody] UsuarioDTO usuarioDTO)
+    [HttpPost("users")]
+    public IActionResult CriarUsuario([FromBody] UsuarioDTO userDTO)
     {
         var validacaoUsuario = new UsuarioValidador(_context);
-        var validacao = validacaoUsuario.UsuarioValidacao(usuarioDTO);
+        var validacao = validacaoUsuario.UsuarioValidacao(userDTO);
 
         if (validacao.Mensagens.Count > 0)
             return BadRequest(validacao);
 
         var usuario = new UsuarioModel
         {
-            Email = usuarioDTO.Email,
-            Nome = usuarioDTO.Nome,
-            Senha = usuarioDTO.Senha
+            Email = userDTO.Email,
+            Nome = userDTO.Nome,
+            Senha = userDTO.Senha
         };
 
         _usuarioService.Adicionar(usuario);
 
-        return Created($"/usuario/{usuario.ID}", new UsuarioModelView
+        return Created($"/user/{usuario.ID}", new UsuarioModelView
         {
             ID = usuario.ID,
             Email = usuario.Email,
@@ -53,12 +53,12 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
 
     #region Login
     /// <summary>
-    /// Fazer login informando o email e senha.
+    /// Log in with your email address and password.
     /// </summary>
     /// <param name="loginDTO"></param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost("usuarios/login")]
+    [HttpPost("users/login")]
     public IActionResult FazerLogin([FromBody] LoginDTO loginDTO)
     {
         var usuario = _usuarioService.Login(loginDTO);
@@ -81,16 +81,16 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
 
     #region Listar 
     /// <summary>
-    /// Listar usuários existentes.
+    /// List existing users.
     /// </summary>
-    /// <param name="pagina"></param>
+    /// <param name="page"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpGet("usuarios/")]
-    public IActionResult ListarUsuarios([FromQuery] int? pagina)
+    [HttpGet("users")]
+    public IActionResult ListarUsuarios([FromQuery] int? page)
     {
         var usuario = new List<UsuarioModelView>();
-        var usuarios = _usuarioService.ListarUsuarios(pagina);
+        var usuarios = _usuarioService.ListarUsuarios(page);
 
         foreach (var item in usuarios)
         {
@@ -108,13 +108,13 @@ public class UsuariosController(IUsuarioService usuarioService, ConnectContext c
 
     #region Apagar
     /// <summary>
-    /// Apagar o perfil informando o id.
+    /// Delete the profile by entering the id.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
     [Authorize]
-    [HttpDelete("usuarios/{id}")]
-    public IActionResult ApagarUsuario([FromRoute] int id)
+    [HttpDelete("users/")]
+    public IActionResult ApagarUsuario([FromQuery] int id)
     {
         if (_context.Usuarios.Any(x => x.ID == id))
         {

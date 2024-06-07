@@ -16,32 +16,32 @@ public class WishListController(IWishlistService wishlist, ConnectContext contex
     private readonly ConnectContext _context = context;
 
     /// <summary>
-    /// Adicionar o produto desejado na lista de desejos.
+    /// Add the desired product to your wish list.
     /// </summary>
-    /// <param name="produtoId"></param>
+    /// <param name="productId"></param>
     /// <returns></returns>
-    [HttpPost("wishlist/{produtoId}")]
-    public IActionResult AdicionarNaLista([FromRoute] int produtoId)
+    [HttpPost("wishlist/{productId}")]
+    public IActionResult AdicionarNaLista([FromRoute] int productId)
     {
         var validacaoLista = new WishlistValidador(_context);
-        var validacao = validacaoLista.ValidacaoAdicionarALista(produtoId);
+        var validacao = validacaoLista.ValidacaoAdicionarALista(productId);
 
         if (validacao.Mensagens.Count > 0)
             return BadRequest(validacao);
 
-        _wishhList.AdicionarProdutoNaLista(produtoId);
+        _wishhList.AdicionarProdutoNaLista(productId);
         return Ok("Produto adicionado a lista de desejo.");
     }
 
     /// <summary>
-    /// Lista itens que estão na lista de desejo.
+    /// List items that are on your wish list.
     /// </summary>
-    /// <param name="pagina"></param>
+    /// <param name="page"></param>
     /// <returns></returns>
     [HttpGet("wishlist/")]
-    public IActionResult ListarItensDesejados([FromQuery] int? pagina)
+    public IActionResult ListarItensDesejados([FromQuery] int? page)
     {
-        var itens = _wishhList.ListarItensDesejados(pagina)
+        var itens = _wishhList.ListarItensDesejados(page)
         .Select(item => new WishListModelView
         {
             ListaId = item.Id,
@@ -54,17 +54,20 @@ public class WishListController(IWishlistService wishlist, ConnectContext contex
     }
 
     /// <summary>
-    /// Remove o item da lista de desejo.
+    /// Removes the item from the wish list.
     /// </summary>
-    /// <param name="listaId"></param>
+    /// <param name="listId"></param>
     /// <returns></returns>
-    [HttpDelete("wishlist/{listaId}")]
-    public IActionResult RemoverItenDaListaDeDesejo([FromRoute] int listaId)
+    [HttpDelete("wishlist/{listId}")]
+    public IActionResult RemoverItenDaListaDeDesejo([FromRoute] int listId)
     {
         var validacaoLista = new WishlistValidador(_context);
-        var validacao = validacaoLista.ValidacaoRemoverDaLista(listaId);
+        var validacao = validacaoLista.ValidacaoRemoverDaLista(listId);
 
-        _wishhList.RemoverProdutoDaLista(listaId);
+        if (validacao.Mensagens.Count > 0)
+            return BadRequest(validacao);
+
+        _wishhList.RemoverProdutoDaLista(listId);
         return Ok("Produto removido da lista de desejo.");
     }
 }

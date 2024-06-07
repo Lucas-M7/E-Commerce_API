@@ -6,19 +6,19 @@ namespace API.Application.Controllers.Produtos;
 
 [ApiController]
 [Route("api/")]
-public class ProdutosController(IProdutoService produtoService) : ControllerBase
+public class ProductsController(IProdutoService produtoService) : ControllerBase
 {
     private readonly IProdutoService _produtoService = produtoService;
 
     /// <summary>
-    /// Lista todos os produtos disponíveis.
+    /// Lists all available products.
     /// </summary>
-    /// <param name="pagina"></param>
+    /// <param name="page"></param>
     /// <returns></returns>
-    [HttpGet("produtos")]
-    public IActionResult ListarProdutos([FromQuery] int? pagina)
+    [HttpGet("products")]
+    public IActionResult ListarProdutos([FromQuery] int? page)
     {
-        var produtos = _produtoService.ListarProdutos(pagina)
+        var produtos = _produtoService.ListarProdutos(page)
                 .Select(item => new ProdutoModelView
                 {
                     ID = item.ProdutoID,

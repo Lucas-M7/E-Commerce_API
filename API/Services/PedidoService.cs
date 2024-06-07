@@ -6,10 +6,9 @@ using API.Services.Validations;
 
 namespace API.Services;
 
-public class PedidoService(ConnectContext context, PagamentoValidador pagamentoValidador) : IPedidoService
+public class PedidoService(ConnectContext context) : IPedidoService
 {
     private readonly ConnectContext _context = context;
-    private readonly PagamentoValidador _pagamentoValidador = pagamentoValidador;
 
     public void SolicitarPedido(int carrinhoId)
     {
@@ -37,7 +36,7 @@ public class PedidoService(ConnectContext context, PagamentoValidador pagamentoV
         _context.SaveChanges();
     }
 
-    public void AtualizarStatusDoPedido(int pedidoId, string novoStatus)
+    public void AtualizarStatusDoPedido(int pedidoId, PagamentoDTO cartaoDTO, string novoStatus)
     {
         var pedido = ObterPedido(pedidoId);
 
