@@ -22,8 +22,8 @@ public class CartController(ICarrinhoService carrinhoService, ConnectContext con
     /// <param name="productId"></param>
     /// <param name="quantity"></param>
     /// <returns></returns>
-    [HttpPost("cart/{userName}/{productId}/{quantity}")]
-    public IActionResult AdicionarAoCarrinho([FromRoute] string userName, int productId, int quantity)
+    [HttpPost("cart/")]
+    public IActionResult AdicionarAoCarrinho([FromQuery] string userName, int productId, int quantity)
     {
         var validacaoCarrinho = new CarrinhoValidador(_context);
         var validacao = validacaoCarrinho.ValidacaoAdicionarAoCarrinho(userName, productId, quantity);
@@ -71,8 +71,8 @@ public class CartController(ICarrinhoService carrinhoService, ConnectContext con
     /// <param name="cartId"></param>
     /// <param name="quantity"></param>
     /// <returns></returns>
-    [HttpDelete("cart/{cartId}/{quantity}")]
-    public IActionResult RemoverItemDoCarrinho([FromRoute] int cartId, int quantity)
+    [HttpDelete("cart/")]
+    public IActionResult RemoverItemDoCarrinho([FromQuery] int cartId, int quantity)
     {
 
         var carrinhoValidacao = new CarrinhoValidador(_context);

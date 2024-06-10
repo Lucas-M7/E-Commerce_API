@@ -17,7 +17,6 @@ builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<ICarrinhoService, CarrinhoService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
-builder.Services.AddScoped<IPagamentoService, PagamentoService>();
 builder.Services.AddScoped<CarrinhoValidador>();
 builder.Services.AddScoped<WishlistValidador>();
 builder.Services.AddScoped<PagamentoValidador>();

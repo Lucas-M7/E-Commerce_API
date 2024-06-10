@@ -114,10 +114,6 @@ public class CarrinhoService(ConnectContext context, CarrinhoValidador carrinhoV
     #region AdicionarNovoItem
     private void AdicionarNovoItem(string usuarioNome, ProdutoModel produto, int quantidade)
     {
-        var totalCarrinho = _context.Carrinho
-            .Where(c => c.UsuarioNome == usuarioNome)
-            .Sum(c => c.ProdutoPreco * c.Quantidade);
-
         var carrinhoProduto = new CarrinhoModel
         {
             UsuarioNome = usuarioNome,

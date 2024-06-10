@@ -20,8 +20,8 @@ public class WishListController(IWishlistService wishlist, ConnectContext contex
     /// </summary>
     /// <param name="productId"></param>
     /// <returns></returns>
-    [HttpPost("wishlist/{productId}")]
-    public IActionResult AdicionarNaLista([FromRoute] int productId)
+    [HttpPost("wishlist/")]
+    public IActionResult AdicionarNaLista([FromQuery] int productId)
     {
         var validacaoLista = new WishlistValidador(_context);
         var validacao = validacaoLista.ValidacaoAdicionarALista(productId);
@@ -58,8 +58,8 @@ public class WishListController(IWishlistService wishlist, ConnectContext contex
     /// </summary>
     /// <param name="listId"></param>
     /// <returns></returns>
-    [HttpDelete("wishlist/{listId}")]
-    public IActionResult RemoverItenDaListaDeDesejo([FromRoute] int listId)
+    [HttpDelete("wishlist/")]
+    public IActionResult RemoverItenDaListaDeDesejo([FromQuery] int listId)
     {
         var validacaoLista = new WishlistValidador(_context);
         var validacao = validacaoLista.ValidacaoRemoverDaLista(listId);
