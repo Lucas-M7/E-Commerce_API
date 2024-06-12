@@ -59,4 +59,4 @@ Remoção do produto do carrinho:  Mesma validação para o id e quantidade.
 
 ## Link do Scalar
 
-Para mais detalhes: <a href="https://ecommercerapi.apidocumentation.com/reference">Scalar</a>
+Para detalhes mais técnicos: <a href="https://ecommercerapi.apidocumentation.com/reference">Scalar</a>
