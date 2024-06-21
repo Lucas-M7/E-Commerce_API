@@ -72,5 +72,6 @@ public class PedidoService(ConnectContext context) : IPedidoService
     {
         return _context.Pedidos.FirstOrDefault(x => x.Id == pedidoId)
             ?? throw new FileNotFoundException("Pedido não encontrado.");
+
     }
 }

@@ -14,6 +14,11 @@ public class OrdersController(IPedidoService pedidoService, ConnectContext conte
     private readonly IPedidoService _pedidoService = pedidoService;
     private readonly ConnectContext _context = context;
 
+    /// <summary>
+    /// Request a order.
+    /// </summary>
+    /// <param name="cartId"></param>
+    /// <returns></returns>
     [HttpPost("orders")]
     public IActionResult SolicitarPedido([FromQuery] int cartId)
     {
@@ -21,6 +26,11 @@ public class OrdersController(IPedidoService pedidoService, ConnectContext conte
         return Ok("Pedido solicitado com sucesso, agora realize o pagamento");
     }
 
+    /// <summary>
+    /// Get all orders.
+    /// </summary>
+    /// <param name="page"></param>
+    /// <returns></returns>
     [HttpGet("orders")]
     public IActionResult ListarPedidos([FromQuery] int? page)
     {
@@ -44,6 +54,11 @@ public class OrdersController(IPedidoService pedidoService, ConnectContext conte
         return Ok(pedido);
     }
 
+    /// <summary>
+    /// Cancel a order.
+    /// </summary>
+    /// <param name="orderId"></param>
+    /// <returns></returns>
     [HttpDelete("orders")]
     public IActionResult CancelarPedido([FromQuery] int orderId)
     {

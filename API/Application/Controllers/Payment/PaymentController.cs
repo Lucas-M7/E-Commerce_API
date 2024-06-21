@@ -1,6 +1,5 @@
 using API.Domain.DTOs;
 using API.Domain.Interfaces;
-using API.Infrastucture.DB;
 using API.Services.Validations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,23 +14,29 @@ public class PaymentController(IPedidoService pedidoService, PagamentoValidador 
     private readonly PagamentoValidador _pagamentoValidador = pagamentoValidador;
     private readonly IPedidoService _pedidoService = pedidoService;
 
+    /// <summary>
+    /// Make a payments
+    /// </summary>
+    /// <param name="orderId"></param>
+    /// <param name="cardDTO"></param>
+    /// <returns></returns>
     [HttpPost("payment")]
-    public IActionResult RealizarPagamento([FromQuery] int pedidoId, [FromBody] PagamentoDTO cartaoDTO)
+    public IActionResult RealizarPagamento([FromQuery] int orderId, [FromBody] PagamentoDTO cardDTO)
     {
-        var validacao = _pagamentoValidador.ValidacaoPagamento(cartaoDTO);
+        var validacao = _pagamentoValidador.ValidacaoPagamento(cardDTO);
 
         if (validacao.Mensagens.Count != 0)
             return BadRequest(validacao);
 
         var pagamento = new PagamentoDTO
         {
-           NumeroCartao = cartaoDTO.NumeroCartao,
-           DataValidade = cartaoDTO.DataValidade,
-           CVV = cartaoDTO.CVV,
-           NomeTitular = cartaoDTO.NomeTitular
+           NumeroCartao = cardDTO.NumeroCartao,
+           DataValidade = cardDTO.DataValidade,
+           CVV = cardDTO.CVV,
+           NomeTitular = cardDTO.NomeTitular
         };
 
-        _pedidoService.AtualizarStatusDoPedido(pedidoId, pagamento, "Pago");
+        _pedidoService.AtualizarStatusDoPedido(orderId, pagamento, "Pago");
         return Ok("Pagamento realizado com sucesso.");
     }
 }
