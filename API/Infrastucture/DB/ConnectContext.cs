@@ -10,4 +10,17 @@ public class ConnectContext(DbContextOptions<ConnectContext> options) : DbContex
     public DbSet<CarrinhoModel> Carrinho { get; set; } = default!;
     public DbSet<WishlistModel> Wishlist { get; set; } = default!;
     public DbSet<PedidosModel> Pedidos { get; set; } = default!;
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<PedidosModel>()
+            .HasKey(p => p.Id);
+
+        modelBuilder.Entity<PedidosModel>()
+            .HasOne<CarrinhoModel>()
+            .WithMany()
+            .HasForeignKey(p => p.CarrinhoId);    
+    }
 }

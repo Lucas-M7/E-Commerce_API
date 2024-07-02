@@ -2,7 +2,6 @@ using API.Domain.DTOs;
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
-using API.Services.Validations;
 
 namespace API.Services;
 
@@ -16,6 +15,7 @@ public class PedidoService(ConnectContext context) : IPedidoService
 
         var pedido = new PedidosModel
         {
+            CarrinhoId = carrinho.ID,
             ProdutoNome = carrinho.ProdutoNome,
             ProdutoPreco = carrinho.ProdutoPreco,
             ProdutoId = carrinho.ProdutoID,
@@ -43,14 +43,31 @@ public class PedidoService(ConnectContext context) : IPedidoService
         pedido.Status = novoStatus;
 
         if (novoStatus.Equals("pago", StringComparison.CurrentCultureIgnoreCase))
+        {
+            var carrinho = _context.Carrinho.FirstOrDefault(x => x.ID == pedido.CarrinhoId);
+            if (carrinho != null)
+                _context.Carrinho.Remove(carrinho);
+
             _context.Pedidos.Remove(pedido);
+        }
 
         _context.SaveChanges();
     }
 
-    public List<PedidosModel> ListarPedidosPendentes(int? pagina)
+    public List<PedidoDTO> ListarPedidosPendentes(int? pagina)
     {
-        var consulta = _context.Pedidos.AsQueryable();
+        var consulta = _context.Pedidos
+        .Where(p => p.Status == "Pendente")
+        .Select(p => new PedidoDTO
+        {
+            Id = p.Id,
+            ProdutoNome = p.ProdutoNome,
+            ProdutoPreco = p.ProdutoPreco,
+            ProdutoId = p.ProdutoId,
+            Quantidade = p.Quantidade,
+            ValorUnitario = p.ValorUnitario,
+            Status = p.Status
+        });
 
         int itensPorPagina = 10;
 

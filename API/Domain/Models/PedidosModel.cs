@@ -10,6 +10,10 @@ public class PedidosModel
     public int Id { get; set; }
 
     [Required]
+    public int CarrinhoId { get; set; } = default!;
+
+
+    [Required]
     public string ProdutoNome { get; set; } = default!;
 
     [Required]

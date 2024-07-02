@@ -1,3 +1,4 @@
+using API.Domain.DTOs;
 using API.Domain.Interfaces;
 using API.Domain.Models;
 using API.Infrastucture.DB;
@@ -34,12 +35,12 @@ public class OrdersController(IPedidoService pedidoService, ConnectContext conte
     [HttpGet("orders")]
     public IActionResult ListarPedidos([FromQuery] int? page)
     {
-        var pedido = new List<PedidosModel>();
+        var pedido = new List<PedidoDTO>();
         var pedidos = _pedidoService.ListarPedidosPendentes(page);
 
         foreach (var item in pedidos)
         {
-            pedido.Add(new PedidosModel
+            pedido.Add(new PedidoDTO
             {
                 Id = item.Id,
                 ProdutoNome = item.ProdutoNome,

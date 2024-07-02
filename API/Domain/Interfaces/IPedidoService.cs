@@ -8,5 +8,5 @@ public interface IPedidoService
     void SolicitarPedido(int carrinhoId);
     void CancelarPedido(int pedidoId);
     void AtualizarStatusDoPedido(int pedidoId, PagamentoDTO cartaoDTO, string status);
-    List<PedidosModel> ListarPedidosPendentes(int? pagina);
+    List<PedidoDTO> ListarPedidosPendentes(int? pagina);
 }
