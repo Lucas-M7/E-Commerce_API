@@ -7,7 +7,7 @@ public class CarrinhoValidador(ConnectContext context)
 {
     private readonly ConnectContext _context = context;
 
-    public ErrorValidacao ValidacaoAdicionarAoCarrinho(String usuarioNome, int produtoId, int quantidade)
+    public ErrorValidacao ValidacaoAdicionarAoCarrinho(string usuarioNome, int produtoId, int quantidade)
     {
         var validacao = new ErrorValidacao()
         {

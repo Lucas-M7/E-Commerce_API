@@ -1,11 +1,19 @@
 using System.Text.RegularExpressions;
 using API.Domain.DTOs;
 using API.Domain.ModelViews;
+using API.Infrastucture.DB;
 
 namespace API.Services.Validations;
 
 public class PagamentoValidador
 {
+    private readonly ConnectContext _context;
+
+    public PagamentoValidador(ConnectContext context)
+    {
+        _context = context;
+    }
+
     public ErrorValidacao ValidacaoPagamento(PagamentoDTO cartaoDTO)
     {
         var validacao = new ErrorValidacao

@@ -36,6 +36,7 @@ public class CarrinhoService(ConnectContext context, CarrinhoValidador carrinhoV
                 AtualizarPrecoTotalCarrinho(usuarioNome);
             }
 
+            AtualizarEstoque(produtoId, quantidade);
             _context.SaveChanges();
         }
         catch (FileNotFoundException ex)
@@ -80,6 +81,7 @@ public class CarrinhoService(ConnectContext context, CarrinhoValidador carrinhoV
             }
 
             AtualizarPrecoTotalCarrinho(carrinhoItem.UsuarioNome);
+            AtualizarEstoque(carrinhoItem.ProdutoID, quantidade, true);
             _context.SaveChanges();
         }
         else
@@ -149,6 +151,24 @@ public class CarrinhoService(ConnectContext context, CarrinhoValidador carrinhoV
         {
             item.Total = totalCarrinho;
         }
+    }
+    #endregion
+
+    #region AtualizarEstoque
+    private void AtualizarEstoque(int produtoId, int quantidade, bool adicionar = false)
+    {
+        var produto = ObterProduto(produtoId);
+
+        if (adicionar)
+            produto.Estoque += quantidade;
+        else
+        {
+            if (produto.Estoque < quantidade)
+                throw new InvalidOperationException("Estoque insuficiente.");
+
+            produto.Estoque -= quantidade;    
+        }
+        _context.SaveChanges(); 
     }
     #endregion
 }
