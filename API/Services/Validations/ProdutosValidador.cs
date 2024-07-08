@@ -40,4 +40,17 @@ public class ProdutosValidador
 
         return validacao;
     }
+
+    public ErrorValidacao ValidacaoBuscarPeloNome(string nome)
+    {
+        var validacao = new ErrorValidacao()
+        {
+            Mensagens = []
+        };
+
+        if (!_context.Produtos.Any(x => x.Nome != nome))
+            validacao.Mensagens.Add("Não foi encontrado nenhum produto com esse nome.");
+
+        return validacao;
+    }
 }

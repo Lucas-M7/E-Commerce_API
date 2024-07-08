@@ -10,6 +10,18 @@ public class ProdutoService(ConnectContext context) : IProdutoService
 
     readonly int itensPorPagina = 20;
 
+    public List<ProdutoModel> BuscarProdutoPeloNome(string nome, int? pagina)
+    {
+        var consulta = _context.Produtos
+            .Where(p => p.Nome.Contains(nome))
+            .AsQueryable();
+
+        if (pagina != null) 
+            consulta = consulta.Skip((int)pagina - 1 * itensPorPagina).Take(itensPorPagina);
+
+        return [.. consulta];      
+    }
+
     public List<ProdutoModel> BuscarProdutoPelaCategoria(string categoria, int? pagina)
     {
         var consulta = _context.Produtos

@@ -36,7 +36,12 @@ public class ProductsController(IProdutoService produtoService, ConnectContext c
         return Ok(produtos);
     }
 
-
+    /// <summary>
+    /// List products for category.
+    /// </summary>
+    /// <param name="category"></param>
+    /// <param name="page"></param>
+    /// <returns></returns>
     [HttpGet("products/category")]
     public IActionResult ListarProdutosPelaCategoria([FromQuery] string category, int? page)
     {
@@ -60,6 +65,12 @@ public class ProductsController(IProdutoService produtoService, ConnectContext c
         return Ok(produtos);
     }
 
+    /// <summary>
+    /// List products for price.
+    /// </summary>
+    /// <param name="price"></param>
+    /// <param name="page"></param>
+    /// <returns></returns>
     [HttpGet("products/price")]
     public IActionResult ListarProdutosPorPreco([FromQuery] double price, int? page)
     {
@@ -80,6 +91,35 @@ public class ProductsController(IProdutoService produtoService, ConnectContext c
                 Estoque = i.Estoque
             }).ToList();
 
-            return Ok(produtos);
+        return Ok(produtos);
+    }
+
+    /// <summary>
+    /// List products for name.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="page"></param>
+    /// <returns></returns>
+    [HttpGet("products/name")]
+    public IActionResult ListarProdutosPeloNome([FromQuery] string name, int? page)
+    {
+        var validacaoProdutos = new ProdutosValidador(_context);
+        var validacao = validacaoProdutos.ValidacaoBuscarPeloNome(name);
+
+        if (validacao.Mensagens.Count > 0)
+            return BadRequest(validacao);
+
+        var produtos = _produtoService.BuscarProdutoPeloNome(name, page)
+            .Select(i => new ProdutoModelView
+            {
+                ID = i.ProdutoID,
+                Nome = i.Nome,
+                Descricao = i.Descricao,
+                Preco = i.Preco,
+                Categoria = i.Categoria,
+                Estoque = i.Estoque
+            }).ToList();
+
+        return Ok(produtos);
     }
 }
