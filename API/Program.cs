@@ -63,7 +63,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
-        Description = "Coloque o seu token JwT aqui."
+        Description = "Your JWT Token here."
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -87,7 +87,7 @@ builder.Services.AddSwaggerGen(options =>
     {
         Version = "v1",
         Title = "E-Commerce-API",
-        Description = "Uma API baseada em funcionalidades de E-Commerce.",
+        Description = "An api with E-Commerce functionalities.",
         Contact = new OpenApiContact
         {
             Name = "LinkedIn",

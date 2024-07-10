@@ -39,7 +39,7 @@ public class ProdutoService(ConnectContext context) : IProdutoService
     public List<ProdutoModel> BuscarProdutoPeloPreco(double preco, int? pagina)
     {
         var consulta = _context.Produtos
-            .Where(p => p.Preco < preco)
+            .Where(p => p.Preco <= preco)
             .AsQueryable();
 
         if (pagina != null)
